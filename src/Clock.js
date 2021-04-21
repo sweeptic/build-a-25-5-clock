@@ -1,23 +1,51 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 const Clock = ({ initialState }) => {
   const [breakLen, setBreakLen] = useState(initialState.break);
   const [sessionLen, setSessionLen] = useState(initialState.session);
+
   const [counter, setCounter] = useState(initialState.session);
   const [timerRef, setTimerRef] = useState();
+  const [actualTimer, setActualTimer] = useState('');
 
+  //modify counter when set session length
   useEffect(() => {
     setCounter(sessionLen);
   }, [sessionLen]);
 
+  const startNewCounter = useCallback(
+    ev => {
+      setActualTimer(ev);
+      clearInterval(timerRef);
+
+      setTimerRef(
+        setInterval(() => {
+          setCounter(val => val - 1); // decrement counter
+        }, 1000)
+      );
+    },
+    [timerRef]
+  );
+
+  //if session end
+  useEffect(() => {
+    console.log(actualTimer + ' time');
+
+    if (counter === 0) {
+      if (actualTimer === 'break') {
+        setCounter(sessionLen); //set the counter
+        startNewCounter('session');
+      } else {
+        setCounter(breakLen); //set the counter
+        startNewCounter('break');
+      }
+    }
+  }, [counter, breakLen, actualTimer, sessionLen, startNewCounter]);
+
   const counterHandler = command => {
     switch (command) {
       case 'start': {
-        setTimerRef(
-          setInterval(() => {
-            setCounter(val => val - 1);
-          }, 1000)
-        );
+        startNewCounter('session');
         break;
       }
       case 'pause': {
@@ -29,6 +57,8 @@ const Clock = ({ initialState }) => {
         clearInterval(timerRef);
         setBreakLen(initialState.break);
         setSessionLen(initialState.session);
+        setCounter(initialState.session);
+        setActualTimer('');
         break;
       }
     }
