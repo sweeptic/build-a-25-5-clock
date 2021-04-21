@@ -29,7 +29,7 @@ const Clock = ({ initialState }) => {
 
   //if session end
   useEffect(() => {
-    console.log(actualTimer + ' time');
+    console.log(actualTimer);
 
     if (counter === 0) {
       if (actualTimer === 'break') {
@@ -50,6 +50,8 @@ const Clock = ({ initialState }) => {
       }
       case 'pause': {
         clearInterval(timerRef);
+        setTimerRef(null);
+
         break;
       }
 
@@ -58,6 +60,7 @@ const Clock = ({ initialState }) => {
         setBreakLen(initialState.break);
         setSessionLen(initialState.session);
         setCounter(initialState.session);
+        setTimerRef(null);
         setActualTimer('');
         break;
       }
@@ -68,18 +71,32 @@ const Clock = ({ initialState }) => {
     <div>
       <span>
         break: {breakLen},{' '}
-        <button onClick={() => setBreakLen(prev => prev + 1)}>up</button>{' '}
         <button
-          onClick={() => setBreakLen(prev => (prev > 1 ? prev - 1 : prev))}>
+          onClick={() => {
+            if (!timerRef) setBreakLen(prev => prev + 1);
+          }}>
+          up
+        </button>{' '}
+        <button
+          onClick={() => {
+            if (!timerRef) setBreakLen(prev => (prev > 1 ? prev - 1 : prev));
+          }}>
           down
         </button>
       </span>
       <br />
       <span>
         session: {sessionLen},{' '}
-        <button onClick={() => setSessionLen(prev => prev + 1)}>up</button>{' '}
         <button
-          onClick={() => setSessionLen(prev => (prev > 1 ? prev - 1 : prev))}>
+          onClick={() => {
+            if (!timerRef) setSessionLen(prev => prev + 1);
+          }}>
+          up
+        </button>{' '}
+        <button
+          onClick={() => {
+            if (!timerRef) setSessionLen(prev => (prev > 1 ? prev - 1 : prev));
+          }}>
           down
         </button>
       </span>
@@ -90,14 +107,14 @@ const Clock = ({ initialState }) => {
       <br />
       <button
         onClick={() => {
-          counterHandler('start');
+          if (!timerRef) counterHandler('start');
         }}>
         play
       </button>
       <br />
       <button
         onClick={() => {
-          counterHandler('pause');
+          if (timerRef) counterHandler('pause');
         }}>
         pause
       </button>
