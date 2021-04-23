@@ -1,7 +1,7 @@
 import './App.css';
 import Clock from './Clock';
 
-const initialState = { break: 5, session: 25 };
+const initialState = { break: 300, session: 1500 };
 
 function App() {
   return (
