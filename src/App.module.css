@@ -1,0 +1,16 @@
+.App {
+  text-align: center;
+  font-size: 3rem;
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.header {
+  margin: 2rem;
+  font-size: 4rem;
+}

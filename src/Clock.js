@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import style from './Clock.module.css';
 
 const Clock = ({ initialState }) => {
   const [sessionLen, setSessionLen] = useState(initialState.session);
@@ -16,9 +17,8 @@ const Clock = ({ initialState }) => {
   const startNewCounter = () => {
     let counter_ = counter;
     let breakTimer_ = breakTimer;
-    clearInterval(timerRef);
     setTimerRef(
-      setInterval(function () {
+      setInterval(() => {
         counter_--; //closure
         if (counter_ >= 0) {
           setCounter(prev => {
@@ -28,12 +28,12 @@ const Clock = ({ initialState }) => {
           audioRef.current.play();
 
           breakTimer_ = !breakTimer_;
-          setBreakTimer(a => !a); //set UI
+          setBreakTimer(a => !a); //set the UI
           if (breakTimer_) {
-            setCounter(breakLen); //set UI
+            setCounter(breakLen); //set the UI
             counter_ = breakLen;
           } else if (!breakTimer) {
-            setCounter(sessionLen); //set UI
+            setCounter(sessionLen); //set the UI
             counter_ = sessionLen;
           }
         }
@@ -69,76 +69,88 @@ const Clock = ({ initialState }) => {
   };
 
   const getTime = sec => {
-    return `${Math.floor(sec / 60) < 10 ? 0 : ''}${Math.floor(sec / 60)}:${
-      sec % 60 < 10 && sec % 60 !== 0 ? 0 : ''
-    }${sec % 60}${!(sec % 60) ? 0 : ''}`;
+    // for easier readability
+    const addZeroToMinute = Math.floor(sec / 60) < 10 ? 0 : '';
+    const minute = Math.floor(sec / 60);
+    const addZeroToSeconds = sec % 60 < 10 && sec % 60 !== 0 ? 0 : '';
+    const Seconds = sec % 60;
+    const startsFromZero = !(sec % 60) ? 0 : '';
+
+    return `${addZeroToMinute}${minute}:${addZeroToSeconds}${Seconds}${startsFromZero}`;
   };
 
   return (
-    <div>
+    <div className={style.container}>
       <span id='break-label'>
-        break:<span id='break-length'>{breakLen / 60}</span>
-        <button
+        <a
+          // let classNames = classnames(styles.sideMenu, { [styles.active]: this.props.menuOpen });
+          className={`${style.timerControl} fas fa-arrow-down`}
+          id='break-decrement'
+          onClick={() => {
+            if (!timerRef) setBreakLen(prev => (prev > 60 ? prev - 60 : prev));
+          }}></a>
+
+        <span>Break: </span>
+        <span id='break-length'>{breakLen / 60}</span>
+        <span>min</span>
+
+        <i
+          className={`${style.timerControl} fas fa-arrow-up`}
           id='break-increment'
           onClick={() => {
             if (!timerRef)
               setBreakLen(prev => (prev < 3600 ? prev + 60 : prev));
-          }}>
-          up
-        </button>{' '}
-        <button
-          id='break-decrement'
-          onClick={() => {
-            if (!timerRef) setBreakLen(prev => (prev > 60 ? prev - 60 : prev));
-          }}>
-          down
-        </button>
+          }}></i>
       </span>
-      <br />
+
       <span id='session-label'>
-        session:<span id='session-length'>{sessionLen / 60}</span>
-        <button
-          id='session-increment'
-          onClick={() => {
-            if (!timerRef)
-              setSessionLen(prev => (prev < 3600 ? prev + 60 : prev));
-          }}>
-          up
-        </button>{' '}
-        <button
+        <a
+          className={`${style.timerControl} fas fa-arrow-down`}
           id='session-decrement'
           onClick={() => {
             if (!timerRef)
               setSessionLen(prev => (prev > 60 ? prev - 60 : prev));
-          }}>
-          down
-        </button>
-      </span>
-      <br />
-      <br />
-      <div id='timer-label'>{breakTimer ? 'Break' : 'Session'}</div>
-      <br />
-      <span id='time-left'>{getTime(counter)}</span>
-      <br />
-      <br />
-      <div>
-        <button
-          id='start_stop'
+          }}></a>
+        <span>Session: </span>
+
+        <span id='session-length'>{sessionLen / 60}</span>
+        <span>min</span>
+        <a
+          className={`${style.timerControl} fas fa-arrow-up`}
+          id='session-increment'
           onClick={() => {
-            counterHandler('toggleCounter');
-          }}>
-          start/stop
-        </button>
-        <br />
+            if (!timerRef)
+              setSessionLen(prev => (prev < 3600 ? prev + 60 : prev));
+          }}></a>
+      </span>
+
+      <div className={style.timer}>
+        <div id='timer-label'>{breakTimer ? 'Break' : 'Session'}</div>
+
+        <span className={style.timerLeft} id='time-left'>
+          {getTime(counter)}
+        </span>
       </div>
 
-      <button
-        id='reset'
-        onClick={() => {
-          counterHandler('reset');
-        }}>
-        reset
-      </button>
+      <div className={style.timerControl}>
+        <div>
+          <a
+            className='fas fa-play '
+            id='start_stop'
+            onClick={() => {
+              counterHandler('toggleCounter');
+            }}>
+            <a class='fas fa-pause'></a>
+          </a>
+        </div>
+        <a
+          class='fas fa-step-backward'
+          id='reset'
+          onClick={() => {
+            counterHandler('reset');
+          }}></a>
+      </div>
+
       <audio
         id='beep'
         preload='auto'
