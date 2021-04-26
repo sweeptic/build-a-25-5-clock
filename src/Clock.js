@@ -140,7 +140,7 @@ const Clock = ({ initialState }) => {
             onClick={() => {
               counterHandler('toggleCounter');
             }}>
-            <a class='fas fa-pause'></a>
+            <span class='fas fa-pause'></span>
           </span>
         </div>
         <span
