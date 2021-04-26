@@ -82,46 +82,46 @@ const Clock = ({ initialState }) => {
   return (
     <div className={style.container}>
       <span id='break-label'>
-        <i
+        <span
           // let classNames = classnames(styles.sideMenu, { [styles.active]: this.props.menuOpen });
           className={`${style.timerControl} fas fa-arrow-down`}
           id='break-decrement'
           onClick={() => {
             if (!timerRef) setBreakLen(prev => (prev > 60 ? prev - 60 : prev));
-          }}></i>
+          }}></span>
 
         <span>Break: </span>
         <span id='break-length'>{breakLen / 60}</span>
         <span>min</span>
 
-        <i
+        <span
           className={`${style.timerControl} fas fa-arrow-up`}
           id='break-increment'
           onClick={() => {
             if (!timerRef)
               setBreakLen(prev => (prev < 3600 ? prev + 60 : prev));
-          }}></i>
+          }}></span>
       </span>
 
       <span id='session-label'>
-        <i
+        <span
           className={`${style.timerControl} fas fa-arrow-down`}
           id='session-decrement'
           onClick={() => {
             if (!timerRef)
               setSessionLen(prev => (prev > 60 ? prev - 60 : prev));
-          }}></i>
+          }}></span>
         <span>Session: </span>
 
         <span id='session-length'>{sessionLen / 60}</span>
         <span>min</span>
-        <i
+        <span
           className={`${style.timerControl} fas fa-arrow-up`}
           id='session-increment'
           onClick={() => {
             if (!timerRef)
               setSessionLen(prev => (prev < 3600 ? prev + 60 : prev));
-          }}></i>
+          }}></span>
       </span>
 
       <div className={style.timer}>
@@ -134,21 +134,21 @@ const Clock = ({ initialState }) => {
 
       <div className={style.timerControl}>
         <div>
-          <i
+          <span
             className='fas fa-play '
             id='start_stop'
             onClick={() => {
               counterHandler('toggleCounter');
             }}>
             <a class='fas fa-pause'></a>
-          </i>
+          </span>
         </div>
-        <i
+        <span
           class='fas fa-step-backward'
           id='reset'
           onClick={() => {
             counterHandler('reset');
-          }}></i>
+          }}></span>
       </div>
 
       <audio
